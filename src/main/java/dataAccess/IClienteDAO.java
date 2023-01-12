@@ -14,4 +14,6 @@ public interface IClienteDAO {
 	int update(Cliente cliente) throws SQLException;
 	
 	int delete(Cliente cliente) throws SQLException;
+	
+	void findById(Cliente cliente) throws SQLException;
 }
