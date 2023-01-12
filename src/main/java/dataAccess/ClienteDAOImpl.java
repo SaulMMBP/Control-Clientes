@@ -12,30 +12,19 @@ public class ClienteDAOImpl implements IClienteDAO {
 	private static final String SQL_SELECT = "SELECT * FROM cliente";
 	private static final String SQL_UPDATE = "UPDATE cliente SET nombre=?, apellido=?, email=?, telefono=?, saldo=? WHERE id_cliente=?";
 	private static final String SQL_DELETE = "DELETE FROM cliente WHERE id_cliente=?";
-
-	/* Variables de Conexión, resultados y consultas */
-	private Connection transactionalConnection;
-	private Connection connection;
-	private ResultSet result;
-	private PreparedStatement statement;
-
-	public ClienteDAOImpl() {
-	}
-
-	public ClienteDAOImpl(Connection transactionalConnection) {
-		this.transactionalConnection = transactionalConnection;
-	}
+	private static final String SQL_FINDBYID = "SELECT * FROM cliente WHERE id_cliente=?";
 
 	@Override
 	public int insert(Cliente cliente) throws SQLException {
 		int registries = 0;
+		Connection connection = null;
+		PreparedStatement statement = null;
 
 		/*
 		 * Inicializamos la conexión (si ya existe una conexión transaccional, es usa,
 		 * si no se crea una conexión nueva
 		 */
-		connection = (this.transactionalConnection != null) ? this.transactionalConnection
-				: MySQLConnection.getConnection();
+		connection = MySQLConnection.getConnection();
 
 		/* Configuramos la consulta */
 		statement = connection.prepareStatement(SQL_INSERT);
@@ -50,29 +39,31 @@ public class ClienteDAOImpl implements IClienteDAO {
 		 * tabla)
 		 */
 		registries = statement.executeUpdate();
-		
+
 		/*
 		 * Cerramos los procesos de conexión y consultas (La conexión se cierra solo si
 		 * es nueva)
 		 */
 		MySQLConnection.close(statement);
-		if (this.transactionalConnection == null)
-			MySQLConnection.close(connection);
+		MySQLConnection.close(connection);
 
 		return registries;
 	}
 
 	@Override
 	public List<Cliente> selectAll() throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
 		/* Extraemos los resultados en objetos de tipo cliente */
 		List<Cliente> clientes = new ArrayList<>();
-		
+
 		/*
 		 * Inicializamos la conexión (si ya existe una conexión transaccional, es usa,
 		 * si no se crea una conexión nueva
 		 */
-		connection = (this.transactionalConnection != null) ? this.transactionalConnection
-				: MySQLConnection.getConnection();
+		connection = MySQLConnection.getConnection();
 
 		/* Configuramos la consulta */
 		statement = connection.prepareStatement(SQL_SELECT);
@@ -91,28 +82,28 @@ public class ClienteDAOImpl implements IClienteDAO {
 			Cliente cliente = new Cliente(idCliente, nombre, apellido, email, telefono, saldo);
 			clientes.add(cliente);
 		}
-		
+
 		/*
 		 * Cerramos los procesos de conexión y consultas (La conexión se cierra solo si
 		 * es nueva)
 		 */
 		MySQLConnection.close(result);
 		MySQLConnection.close(statement);
-		if (this.transactionalConnection == null)
-			MySQLConnection.close(connection);
+		MySQLConnection.close(connection);
 		return clientes;
 	}
 
 	@Override
 	public int update(Cliente cliente) throws SQLException {
 		int registries = 0;
+		Connection connection = null;
+		PreparedStatement statement = null;
 
 		/*
 		 * Inicializamos la conexión (si ya existe una conexión transaccional, es usa,
 		 * si no se crea una conexión nueva
 		 */
-		connection = (this.transactionalConnection != null) ? this.transactionalConnection
-				: MySQLConnection.getConnection();
+		connection = MySQLConnection.getConnection();
 
 		/* Configuramos la consulta */
 		statement = connection.prepareStatement(SQL_UPDATE);
@@ -128,27 +119,27 @@ public class ClienteDAOImpl implements IClienteDAO {
 		 * tabla)
 		 */
 		registries = statement.executeUpdate();
-		
+
 		/*
 		 * Cerramos los procesos de conexión y consultas (La conexión se cierra solo si
 		 * es nueva)
 		 */
 		MySQLConnection.close(statement);
-		if (this.transactionalConnection == null)
-			MySQLConnection.close(connection);
+		MySQLConnection.close(connection);
 		return registries;
 	}
 
 	@Override
 	public int delete(Cliente cliente) throws SQLException {
 		int registries = 0;
+		Connection connection = null;
+		PreparedStatement statement = null;
 
 		/*
 		 * Inicializamos la conexión (si ya existe una conexión transaccional, es usa,
 		 * si no se crea una conexión nueva
 		 */
-		connection = (this.transactionalConnection != null) ? this.transactionalConnection
-				: MySQLConnection.getConnection();
+		connection = MySQLConnection.getConnection();
 
 		/* Configuramos la consulta */
 		statement = connection.prepareStatement(SQL_DELETE);
@@ -159,15 +150,56 @@ public class ClienteDAOImpl implements IClienteDAO {
 		 * tabla)
 		 */
 		registries = statement.executeUpdate();
-		
+
 		/*
 		 * Cerramos los procesos de conexión y consultas (La conexión se cierra solo si
 		 * es nueva)
 		 */
 		MySQLConnection.close(statement);
-		if (this.transactionalConnection == null)
-			MySQLConnection.close(connection);
+		MySQLConnection.close(connection);
 		return registries;
+	}
+
+	@Override
+	public void findById(Cliente cliente) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
+		/*
+		 * Inicializamos la conexión (si ya existe una conexión transaccional, es usa,
+		 * si no se crea una conexión nueva
+		 */
+		connection = MySQLConnection.getConnection();
+
+		/* Configuramos la consulta */
+		statement = connection.prepareStatement(SQL_FINDBYID);
+		statement.setInt(1, cliente.getIdCliente());
+
+		/* Ejecutamos la consulta y guardamos el resultado */
+		result = statement.executeQuery();
+
+		if (result.next()) {
+			String nombre = result.getString("nombre");
+			String apellido = result.getString("apellido");
+			String email = result.getString("email");
+			String telefono = result.getString("telefono");
+			double saldo = result.getDouble("saldo");
+			
+			cliente.setNombre(nombre);
+			cliente.setApellido(apellido);
+			cliente.setEmail(email);
+			cliente.setTelefono(telefono);
+			cliente.setSaldo(saldo);
+		}
+		
+		/*
+		 * Cerramos los procesos de conexión y consultas (La conexión se cierra solo si
+		 * es nueva)
+		 */
+		MySQLConnection.close(result);
+		MySQLConnection.close(statement);
+		MySQLConnection.close(connection);
 	}
 
 }
