@@ -7,7 +7,7 @@ import entity.Cliente;
 
 public interface IClienteDAO {
 
-	int create(Cliente cliente) throws SQLException;
+	int insert(Cliente cliente) throws SQLException;
 
 	List<Cliente> selectAll() throws SQLException;
 		
