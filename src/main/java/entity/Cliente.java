@@ -30,6 +30,10 @@ public class Cliente {
 		this.saldo = saldo;
 	}
 
+	public Cliente(int idCliente) {
+		this.idCliente = idCliente;
+	}
+
 	public int getIdCliente() {
 		return idCliente;
 	}
