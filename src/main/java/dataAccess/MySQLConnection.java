@@ -8,6 +8,9 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * Clase de conexión a base de datos
+ * Para que funcione la conexión, se debe de agregar el conector de la base de datos al servidor
+ * es decir, el archivo jar colocarlo en la carpeta lib del servidor (en este caso el conector de
+ * MySQL en la carpeta de Tomcat 9.0) NO SE TE OLVIDE HDTRPM!!!!!!!
  * @author SAUL
  *
  */
@@ -15,10 +18,10 @@ public class MySQLConnection {
 
 	/* Constantes de conexion */
 	private static final String URL = "jdbc:mysql://localhost:3306/control_clientes_db?"
-			+ "useSSL=false&" // Inseguro, solo con propósito de pruebas y aprendizaje
+			+ "useSSL=false&"
 			+ "useTimezone=true&"
 			+ "serverTimezone=UTC&"
-			+ "allowPublicKeyRetrieval=true"; // Inseguro, solo con propósito de pruebas y aprendizaje
+			+ "allowPublicKeyRetrieval=true";	
 	private static final String USER = "root"; // Inseguro, solo con propósito de pruebas y aprendizaje
 	private static final String PASSWORD = "dango1"; // Inseguro, solo con propósito de pruebas y aprendizaje
 	
@@ -40,7 +43,7 @@ public class MySQLConnection {
 			dataSource.setPassword(PASSWORD);
 			
 			/* Configuración de tamaño inicial */
-			dataSource.setInitialSize(5);
+			dataSource.setInitialSize(50);
 		}
 		return dataSource;
 	}
