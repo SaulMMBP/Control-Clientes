@@ -7,31 +7,29 @@
             </button>
         </div>
         <div class="modal-body">
-            <form id="form" action="${ pageContext.request.contextPath }/ServletController?accion=insertar" method="post">
+            <form id="form"
+                action="${ pageContext.request.contextPath }/ServletController?accion=insertar"
+                method="post" accept-charset="utf-8">
                 <div class="form-control">
-                    <label for="nombre">Nombre*</label>
-                    <input name="nombre" type="text" required /> 
+                    <label for="nombre">Nombre*</label> 
+                    <input name="nombre" type="text" required />
                 </div>
-                    
                 <div class="form-control">
-                    <label for="apellido">Apellido*</label>
-                    <input name="apellido" type="text" required /> 
+                    <label for="apellido">Apellido*</label> 
+                    <input name="apellido" type="text" required />
                 </div>
-
                 <div class="form-control">
                     <label for="email">Email*</label> 
-                    <input name="email" type="email" required /> 
-                </div>                
-
+                    <input name="email" type="email" required />
+                </div>
                 <div class="form-control">
-                    <label for="telefono">Telefono*</label>
-                    <input name="telefono" type="tel" required /> 
-                </div>                
-
+                    <label for="telefono">Telefono*</label> 
+                    <input name="telefono" type="tel" required />
+                </div>
                 <div class="form-control">
                     <label for="saldo">Saldo*</label> 
-                    <input name="saldo" type="number" required />
-                </div>                
+                    <input name="saldo" type="number" required step="any" />
+                </div>
             </form>
         </div>
         <div class="modal-footer">
